@@ -16,3 +16,4 @@ HTML – Structuring the game layout.
 CSS – Adding animations, styling, and effects.
 JavaScript – Implementing game logic, AI opponent, and UI interactions.
 Canvas API – Creating a moving star background effect.
+ 
