@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stone-Paper-Scissor</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background-color: black;
+        }
+
+        #lights {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 9px 40px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-side, .computer-side {
+            width: 45%;
+            text-align: center;
+        }
+
+        .choice {
+            font-size: 100px;
+            margin-top: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .result {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 36px;
+            font-weight: bold;
+            color: orange;
+            transition: top 0.5s ease-in-out;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        h1, h2 {
+            color: #d1d1d1;
+        }
+
+        .buttons {
+            position: relative;
+            width: 350px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+
+        .buttons video {
+            backdrop-filter: blur(80%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            backdrop-filter: blur(90%);
+            z-index: 1;
+            transition: all 0.3s ease-in-out;
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: translateX(3px);
+            background: rgba(76, 67, 67, 0.16);
+            color: black;
+        }
+        .background-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('background.jpg') no-repeat center center/cover;
+          }
+
+          .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+          }
+
+
+      .hot-button {
+
+        font-size: 15px;
+        font-weight: bold;
+        padding: 15px 40px;
+        border: none;
+        color: white;
+        background: linear-gradient(45deg, #0033cc, #00ccff, #99ffff);
+        border-radius: 10px;
+        cursor: pointer;
+        text-transform: uppercase;
+        position: relative;
+        box-shadow: 0 0 10px rgba(0, 153, 255, 0.8);
+        transition: transform 0.2s ease-in-out;
+        animation: glow 1.5s infinite alternate;
+      }
+
+
+      @keyframes glow {
+        0% { box-shadow: 0 0 10px rgba(0, 153, 255, 0.8); }
+        100% { box-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(153, 255, 255, 0.8); }
+    }
+
+
+      @keyframes flicker {
+          0% { opacity: 1; }
+          10%{opacity:2}
+          20%{opacity:3}
+          50% { opacity: 0.8; }
+          60%{opacity:4}
+          70%{opacity:5}
+          100% { opacity: 1; }
+      }
+
+
+      .hot-button::after {
+          content: '';
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          width: 80px;
+          height: 30px;
+          background: rgba(0, 204, 255, 0.8);
+          filter: blur(15px);
+          transform: translateX(-50%);
+          animation: flicker 0.2s infinite;
+      }
+
+      .hot-button:hover {
+        transform: scale(1.1);
+        background: linear-gradient(45deg, #00ccff, #99ffff, #0033cc);
+      }
+
+    </style>
+</head>
+<body>
+
+
+    <div id="lights">
+        <canvas></canvas>
+    </div>
+
+
+    <div class="container" style="background-image:url('star.jpg')">
+        <div class="user-side">
+            <h2>Your Choice</h2>
+            <div id="user-choice" class="choice"></div>
+        </div>
+        <div class="computer-side">
+            <h2>AI Choice</h2>
+            <div id="computer-choice" class="choice"></div>
+        </div>
+    </div>
+
+
+    <div id="result" class="result"></div>
+
+
+    <div class="buttons" class="background-container">
+
+        <video autoplay loop muted playsinline   class="video-container">
+            <source src="smallvid.mp4" type="video/mp4">
+            <source src="buttonback.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+
+        <button id="stone">Stone</button>
+        <button id="paper">Paper</button>
+        <button id="scissor">Scissor</button>
+    </div>
+    <a href="dom.html"><button class="hot-button" style="text-decoration:none">About Me</button></a>
+
+    <script>
+
+
+
+        const canvas = document.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const starCount = 100;
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 2;
+                this.speed = Math.random() * 0.5 + 0.5;
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height) {
+                    this.y = 0;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createStars() {
+            for (let i = 0; i < starCount; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+            requestAnimationFrame(animateStars);
+        }
+
+        createStars();
+        animateStars();
+
+        // Game Logic
+        let computerscore = 0;
+        let userscore = 0;
+        let roundsPlayed = 0;
+        let totalRounds = parseInt(prompt("Enter how many rounds you want:"));
+
+        document.getElementById("stone").addEventListener("click", () => playGame("S"));
+        document.getElementById("paper").addEventListener("click", () => playGame("P"));
+        document.getElementById("scissor").addEventListener("click", () => playGame("C"));
+
+        function playGame(userInput) {
+            if (roundsPlayed >= totalRounds) {
+                alert(`Game Over!\nYour Score: ${userscore}\nComputer's Score: ${computerscore}`);
+                const playAgain = confirm("Do you want to play again?");
+                if (playAgain) {
+                    resetGame();
+                }
+                return;
+            }
+
+            const userChoiceDiv = document.getElementById("user-choice");
+            const computerChoiceDiv = document.getElementById("computer-choice");
+            const resultDiv = document.getElementById("result");
+
+
+            resultDiv.style.top = "-100px";
+
+
+            userChoiceDiv.textContent = getEmoji(userInput);
+            userChoiceDiv.style.animation = "bounce 1s infinite";
+
+
+            setTimeout(() => {
+
+                const choices = ["S", "P", "C"];
+                const ci = Math.floor(Math.random() * 3);
+                const computerChoice = choices[ci];
+
+
+                computerChoiceDiv.textContent = getEmoji(computerChoice);
+                computerChoiceDiv.style.animation = "bounce 1s infinite";
+
+
+                let result;
+                if (userInput === computerChoice) {
+                    result = "It's a tie!";
+                } else if (
+                    (userInput === "S" && computerChoice === "C") ||
+                    (userInput === "P" && computerChoice === "S") ||
+                    (userInput === "C" && computerChoice === "P")
+                ) {
+                    result = "You win!";
+                    userscore++;
+                } else {
+                    result = "You lose!";
+                    computerscore++;
+                }
+
+
+                setTimeout(() => {
+                    resultDiv.textContent = result;
+                    resultDiv.style.top = "20px";
+                }, 100);
+
+
+                roundsPlayed++;
+
+
+                if (roundsPlayed === totalRounds) {
+                    setTimeout(() => {
+                        alert(`Game Over!\nYour Score: ${userscore}\nComputer's Score: ${computerscore}`);
+                        const playAgain = confirm("Do you want to play again?");
+                        if (playAgain) {
+                            resetGame();
+                        }
+                    }, 1000);
+                }
+            }, 2000);
+        }
+
+        function resetGame() {
+            computerscore = 0;
+            userscore = 0;
+            roundsPlayed = 0;
+            totalRounds = parseInt(prompt("Enter how many rounds you want:"));
+            document.getElementById("user-choice").textContent = "";
+            document.getElementById("computer-choice").textContent = "";
+            document.getElementById("result").textContent = "";
+        }
+
+        function getEmoji(choice) {
+            switch (choice) {
+                case "S": return "✊";
+                case "P": return "✋";
+                case "C": return "✌️";
+                default: return "❓";
+            }
+        }
+
+    </script>
+</body>
+</html>
